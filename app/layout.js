@@ -1,5 +1,6 @@
 import localFont from "next/font/local";
 import "./globals.css";
+import { SessionProvider } from "next-auth/react";
 import { Footer } from "@/components/footer";
 import { Nav } from "@/components/Nav";
 
@@ -25,10 +26,11 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Nav/>
-
-        {children}
-        <Footer/>
+        <SessionProvider>
+          <Nav/>
+          {children}
+          <Footer/>
+        </SessionProvider>
       </body>
     </html>
   );
