@@ -5,11 +5,11 @@ import * as yup from "yup";
 
 const schema = yup.object().shape({
     email: yup.string().email().required(),
-    password: yup.string().required().matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-        "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
-    ),
-    passwordConfirmation: yup.string().required("Confirm password").oneOf([yup.ref('password'), null], 'Passwords must match'),
+    // password: yup.string().required().matches(
+    //     /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+    //     "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
+    // ),
+    // passwordConfirmation: yup.string().required("Confirm password").oneOf([yup.ref('password'), null], 'Passwords must match'),
 })
 
 export function AuthEmail() {
@@ -34,7 +34,7 @@ export function AuthEmail() {
                 onChange={handleChange}/>
                 {errors.email && touched.email ? <span className="text-[10px] text-red-500">{errors.email}</span> : null}
             </div>
-            <div className="flex flex-col mb-2">
+            {/* <div className="flex flex-col mb-2">
                 <TextField
                 type="password"
                 id="password"
@@ -44,7 +44,7 @@ export function AuthEmail() {
                 value={values.password}
                 onChange={handleChange}/>
                 {errors.password && touched.password ? <span className="text-[10px] text-red-500">{errors.password}</span> : null}
-            </div>
+            </div> */}
             {!errors.password && values.password.length ?
             <div className="flex flex-col mb-2">
                 <TextField
