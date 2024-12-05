@@ -1,6 +1,7 @@
 "use client"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { TextField,CircularProgress,Dialog,DialogContent,DialogActions } from "@mui/material";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -8,7 +9,8 @@ import { businessCategories } from "@/utils/business_categories";
 import { ngstates } from "@/utils/ng_states";
 import { IoIosCheckmarkCircle } from "react-icons/io";
 import { db } from "@/config/firebase.config";
-import { addDoc,collection } from "firebase/firestore";
+import { getDoc,doc } from "firebase/firestore";
+
 
 const rules = yup.object().shape({
     business_name:yup.string("business name must be a string").required("business name is mandatory").min(6,"business name must be at least 6 characters"),
@@ -20,40 +22,37 @@ const rules = yup.object().shape({
     website: yup.string().url().nullable(),
 });
 
-export default function Add ({userID}) {
+export default function UpdateBusinessProcess () {
     const [startProgress,setStartProgress] = useState(false);
     const [open, setOpen] = useState(false);
+    const [business, setBusiness] = useState({});
+
+    const docId =useSearchParams().get("doc_id");
 
     const handleClickOpen = () => setOpen(true);
     const handleClose = () =>  setOpen(false);
 
+    //fetch current business records
+    useEffect(()=>{
+        const handleFetchBusiness = async () => {
+            const res = await getDoc(doc(db,"directories",docId));
+            if (res.exists()) {
+                setBusiness(res.data())
+            } else{
+                alert("Invalid business ID")
+            }   
+        }
+        handleFetchBusiness()
+    },[])
+    
+
     const { handleSubmit,values,handleChange,touched,errors } = useFormik({
-        initialValues: { business_name:"", category:"",sub_category:"",state:"",lga:"",business_description:"",website:""},
+        initialValues: { business_name:business?.businessName, category:business?.category,sub_category:"",state:"",lga:"",business_description:business?.description,website:business?.url},
         onSubmit: async () => {
             // Start loading indicator
             setStartProgress(true);
 
             // Send records to db
-            await addDoc(collection(db,"directories"),{
-                businessName:values.business_name,
-                category:values.category,
-                subCategory:values.sub_category,
-                state:values.state,
-                lga:values.lga,
-                description:values.business_description,
-                url:values.website,
-                createdBy:userID,
-                createdAt:new Date().getTime()
-            })
-            .then(() => {
-                setStartProgress(false); //stop loading indicator
-                handleClickOpen(); // Open success notification
-            })
-            .catch((e) => {
-                console.error(e);
-                setStartProgress(false); //stop loading indicator
-                alert("An error has occured"); //Open error message
-            })
         },
         validationSchema: rules
     });
@@ -62,7 +61,7 @@ export default function Add ({userID}) {
         <>
         <main className="flex justify-center px-2 md:px-8 lg:px-16 py-4 md:py-6 lg:py-8">
             <div className="w-full md:w-[620px] rounded-md bg-white shadow-md p-4">
-                <h1 className="text-2xl font-thin mb-6">Add a business</h1>
+                <h1 className="text-2xl font-thin mb-6">Update your Business</h1>
 
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3">
