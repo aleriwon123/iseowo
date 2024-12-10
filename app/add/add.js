@@ -62,7 +62,7 @@ export default function Add ({userID}) {
         <>
         <main className="flex justify-center px-2 md:px-8 lg:px-16 py-4 md:py-6 lg:py-8">
             <div className="w-full md:w-[620px] rounded-md bg-white shadow-md p-4">
-                <h1 className="text-2xl font-thin mb-6">Add a business</h1>
+                <h1 className="text-2xl font-thin mb-6">Add a business.</h1>
 
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3">
