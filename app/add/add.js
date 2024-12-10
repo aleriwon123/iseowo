@@ -86,7 +86,7 @@ export default function Add ({userID}) {
                             className="w-full"
                             value={values.category}
                             onChange={handleChange}>
-                                <option value="none">choose category</option>
+                                <option value="none">Choose category</option>
                                 {businessCategories.map(cat => <option value={cat.category} key={cat.category}>{cat.category}</option>)}
                             </TextField>
                             {touched.category && errors.category ? <span className="text-xs text-red-400">{errors.category}</span> : null}
